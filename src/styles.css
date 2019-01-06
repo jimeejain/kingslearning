@@ -1,1 +1,39 @@
 /* You can add global styles to this file, and also import other style files */
+body {
+  font-family: 'Open Sans', sans-serif;
+}
+[hidden] {
+  display: none !important;
+}
+.display-flex {
+  display: flex;
+}
+
+.width-expand {
+  flex: 1 1 auto;
+}
+
+.align-center {
+  align-items: center;
+
+}
+.text-truncate {
+  width: 100%;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.text-right {
+  text-align: right;
+}
+.padd-r-10 {
+  padding-right: 10px;
+}
+
+.padd-b-16{
+  padding-bottom: 16px;
+}
+
+.mar-r-10 {
+  margin-right: 10px;
+}

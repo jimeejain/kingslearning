@@ -1,0 +1,136 @@
+<h2 style="text-align: center;">Task List</h2>
+<div class="w3-container taskList">
+  <ul class="w3-ul w3-card-4">
+    <li
+      class="display-flex align-center"
+      *ngFor="
+        let task of allTasks;
+        let i = index;
+        let isFirst = first;
+        let isLast = last
+      "
+
+    >
+      <div class="clickable">
+        <input
+          type="checkbox"
+          class="w3-check"
+          name="task"
+          [ngModel]="task.status"
+          (change)="updateCompletedTasks(task)"
+        />
+      </div>
+      <div
+        class="width-expand task-content clickable"
+        (click)="openModal(task)"
+      >
+        <h4
+          class="task-heading text-truncate"
+          [ngClass]="{ strike: task.status }"
+        >
+          {{ task.title }}
+        </h4>
+        <p class="task-desc text-truncate" *ngIf="task.desc">{{ task.desc }}</p>
+        <p class="task-level">Level : {{ task.level }}</p>
+      </div>
+      <div class="swap-container">
+        <button
+          class="swap-btn clickable"
+          (click)="swapItems(i, i - 1)"
+          [disabled]="isFirst"
+        >
+          <i class="fa fa-arrow-circle-up"></i>
+        </button>
+        <button
+          class="swap-btn clickable"
+          (click)="swapItems(i, i + 1)"
+          [disabled]="isLast"
+        >
+          <i class="fa fa-arrow-circle-down"></i>
+        </button>
+      </div>
+    </li>
+
+    <li class="w3-bar" (click)="openModal()">
+      <div class="w3-bar-item">
+        <div class="w3-large clickable display-flex align-center">
+          <span class="fa fa-plus-circle padd-r-10"></span>
+          <div>Add New Task</div>
+        </div>
+      </div>
+    </li>
+  </ul>
+</div>
+
+<div id="modal" class="w3-modal w3-block" *ngIf="modalIsOpen">
+  <div class="w3-modal-content w3-card-4">
+    <header class="w3-container w3-teal">
+      <span
+        (click)="modalIsOpen = false;"
+        class="w3-button w3-display-topright"
+        >&times;</span
+      >
+      <h2>{{ currentTask ? "Edit" : "Create" }} Task</h2>
+    </header>
+    <form
+      class="w3-container modalText"
+      name="creatEditTaskForm"
+      (ngSubmit)="saveTask($event)"
+      #taskForm="ngForm"
+    >
+      <label class="padd-b-16 w3-block">
+        Title
+        <input
+          type="text"
+          class="w3-input"
+          name="taskTitleInput"
+          [(ngModel)]="taskTitle"
+          [required]="true"
+          #taskTitleInput="ngModel"
+          placeholder="Enter the title for task"
+        />
+      </label>
+      <div [hidden]="taskTitleInput?.valid || taskTitleInput?.pristine" class="alert w3-text-red">
+        Task Name is required
+      </div>
+      <label class="padd-b-16 w3-block">
+        Description
+        <textarea
+          [(ngModel)]="taskDesc"
+          name="taskDescriptionInput"
+          class="w3-block w3-input"
+          placeholder="Enter the description"
+          [required]="true"
+          #taskDescriptionInput="ngModel"
+        ></textarea>
+        <div [hidden]="taskDescriptionInput?.valid || taskDescriptionInput?.pristine" class="alert w3-text-red">
+          Task Description is required
+        </div>
+      </label>
+      <label class="padd-b-16 w3-block">
+        Level
+        <select [(ngModel)]="taskLevel" class="w3-select" name="taskLevel">
+          <option *ngFor="let level of levels" [ngValue]="level">{{
+            level
+          }}</option>
+        </select>
+      </label>
+      <footer class="w3-container padd-b-16 text-right">
+        <button
+          class="w3-btn w3-white w3-border w3-border-blue w3-round mar-r-10"
+          (click)="$event.preventDefault();reset()"
+          [hidden]="taskForm.form.pristine"
+        >
+          Reset
+        </button>
+        <button
+          class="w3-btn w3-white w3-border w3-border-blue w3-round mar-r-10"
+          type="submit"
+          [disabled]="!taskForm.form.valid"
+        >
+          Save
+        </button>
+      </footer>
+    </form>
+  </div>
+</div>
